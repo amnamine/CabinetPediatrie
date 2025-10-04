@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord - Cabinet Pédiatrique</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="dashboard-page">
+    <header class="dashboard-header">
+        <div class="header-content">
+            <div class="header-left">
+                <i class="fas fa-stethoscope"></i>
+                <h1>Cabinet Pédiatrique</h1>
+            </div>
+            <div class="header-right">
+                <span class="welcome">Bienvenue, Dr Taibi Houria</span>
+                <button id="logoutBtn" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Déconnexion
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-main">
+        <div class="dashboard-container">
+            <div class="dashboard-sidebar">
+                <nav class="sidebar-nav">
+                    <a href="#consultations" class="nav-item active" data-section="consultations">
+                        <i class="fas fa-clipboard-list"></i>
+                        Consultations
+                    </a>
+                    <a href="#nouvelle-consultation" class="nav-item" data-section="nouvelle-consultation">
+                        <i class="fas fa-plus-circle"></i>
+                        Nouvelle Consultation
+                    </a>
+                    <a href="#statistiques" class="nav-item" data-section="statistiques">
+                        <i class="fas fa-chart-bar"></i>
+                        Statistiques
+                    </a>
+                </nav>
+            </div>
+
+            <div class="dashboard-content">
+                <!-- Section Consultations -->
+                <section id="consultations" class="content-section active">
+                    <div class="section-header">
+                        <h2>Liste des Consultations</h2>
+                        <button id="refreshConsultations" class="btn-refresh">
+                            <i class="fas fa-sync-alt"></i>
+                            Actualiser
+                        </button>
+                    </div>
+                    
+                    <div class="consultations-list" id="consultationsList">
+                        <!-- Les consultations seront chargées ici -->
+                    </div>
+                </section>
+
+                <!-- Section Nouvelle Consultation -->
+                <section id="nouvelle-consultation" class="content-section">
+                    <div class="section-header">
+                        <h2>Nouvelle Consultation</h2>
+                    </div>
+                    
+                    <form id="consultationForm" class="consultation-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="date_consultation">Date de consultation *</label>
+                                <input type="date" id="date_consultation" name="date_consultation" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="age">Âge *</label>
+                                <input type="number" id="age" name="age" min="0" max="18" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nom_patient">Nom du patient *</label>
+                                <input type="text" id="nom_patient" name="nom_patient" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="prenom_patient">Prénom du patient *</label>
+                                <input type="text" id="prenom_patient" name="prenom_patient" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="motif_consultation">Motif de consultation *</label>
+                            <textarea id="motif_consultation" name="motif_consultation" rows="3" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="examen_clinique">Examen clinique</label>
+                            <textarea id="examen_clinique" name="examen_clinique" rows="4"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="examens_complementaires">Examens complémentaires</label>
+                            <textarea id="examens_complementaires" name="examens_complementaires" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="traitement">Traitement</label>
+                            <textarea id="traitement" name="traitement" rows="4"></textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn-save">
+                                <i class="fas fa-save"></i>
+                                Enregistrer
+                            </button>
+                            <button type="button" id="resetForm" class="btn-reset">
+                                <i class="fas fa-undo"></i>
+                                Réinitialiser
+                            </button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Section Statistiques -->
+                <section id="statistiques" class="content-section">
+                    <div class="section-header">
+                        <h2>Statistiques</h2>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <i class="fas fa-calendar-check"></i>
+                            <h3 id="totalConsultations">0</h3>
+                            <p>Consultations totales</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-calendar-day"></i>
+                            <h3 id="consultationsAujourdhui">0</h3>
+                            <p>Consultations aujourd'hui</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-child"></i>
+                            <h3 id="ageMoyen">0</h3>
+                            <p>Âge moyen</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal pour modifier une consultation -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Modifier la consultation</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="editForm" class="consultation-form">
+                <input type="hidden" id="edit_id" name="id">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit_date_consultation">Date de consultation *</label>
+                        <input type="date" id="edit_date_consultation" name="date_consultation" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_age">Âge *</label>
+                        <input type="number" id="edit_age" name="age" min="0" max="18" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit_nom_patient">Nom du patient *</label>
+                        <input type="text" id="edit_nom_patient" name="nom_patient" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_prenom_patient">Prénom du patient *</label>
+                        <input type="text" id="edit_prenom_patient" name="prenom_patient" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit_motif_consultation">Motif de consultation *</label>
+                    <textarea id="edit_motif_consultation" name="motif_consultation" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit_examen_clinique">Examen clinique</label>
+                    <textarea id="edit_examen_clinique" name="examen_clinique" rows="4"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit_examens_complementaires">Examens complémentaires</label>
+                    <textarea id="edit_examens_complementaires" name="examens_complementaires" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit_traitement">Traitement</label>
+                    <textarea id="edit_traitement" name="traitement" rows="4"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn-save">
+                        <i class="fas fa-save"></i>
+                        Mettre à jour
+                    </button>
+                    <button type="button" class="btn-cancel" onclick="closeModal()">
+                        <i class="fas fa-times"></i>
+                        Annuler
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
