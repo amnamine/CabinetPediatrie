@@ -143,6 +143,25 @@ body {
     box-shadow: 0 6px 20px rgba(255,215,0,0.4);
 }
 
+.btn-secondary {
+    display: inline-block;
+    margin-top: 2rem;
+    margin-left: 1rem;
+    padding: 15px 30px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+    background: #ffffff;
+    color: #667eea;
+}
+
 .hero-image {
     text-align: center;
 }

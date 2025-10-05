@@ -156,6 +156,16 @@ app.post('/logout', (req, res) => {
     res.json({ success: true });
 });
 
+// Télécharger l'application desktop
+app.get('/telecharger', (req, res) => {
+    const filePath = path.join(__dirname, 'CabinetPediatre.exe');
+    res.download(filePath, 'CabinetPediatre.exe', (err) => {
+        if (err) {
+            return res.status(404).send('Fichier introuvable');
+        }
+    });
+});
+
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur le port ${PORT}`);
 });
